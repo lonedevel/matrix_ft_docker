@@ -1,0 +1,14 @@
+FROM alpine:latest
+
+COPY startup_matrix.sh /root/startup_matrix.sh
+
+RUN apk add --update g++ make git \
+    && cd /root \
+    && git clone https://github.com/hzeller/flaschen-taschen.git --recursive \
+    && cd /root/flaschen-taschen/server \
+    && make HARDWARE_DESC=adafruit-hat-pwm FT_BACKEND=rgb-matrix all \
+    && chmod +x /root/startup_matrix.sh
+
+EXPOSE 1337:1337/udp
+
+ENTRYPOINT ["/root/startup_matrix.sh"]

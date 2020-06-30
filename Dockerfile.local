@@ -1,0 +1,13 @@
+FROM alpine:latest
+
+COPY startup_local.sh /root/startup_local.sh
+
+RUN apk add --update g++ make git \
+    && git clone https://github.com/hzeller/flaschen-taschen.git --recursive \
+    && cd /flaschen-taschen/server \
+    && make all \
+    && chmod +x /root/startup_local.sh
+
+EXPOSE 1337:1337/udp
+
+ENTRYPOINT ["/root/startup_local.sh"]
